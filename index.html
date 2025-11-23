@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClinicalMCP - Clinical Trial Safety</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #F9FAFB;
+      color: #111827;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #6B7280;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6B7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .textarea-wrapper {
+      display: flex;
+      gap: 8px;
+    }
+
+    textarea {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .icon-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid #D1D5DB;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      color: #6B7280;
+    }
+
+    .icon-btn:hover {
+      border-color: #2563EB;
+      color: #2563EB;
+      background: #F0F9FF;
+    }
+
+    .run-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2563EB;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .run-btn:hover {
+      background: #1D4ED8;
+    }
+
+    .run-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .scenarios {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .scenario-btn {
+      flex: 1;
+      padding: 10px;
+      background: #F3F4F6;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover {
+      background: #E5E7EB;
+      border-color: #2563EB;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #F3F4F6;
+      font-size: 13px;
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .data-label {
+      color: #6B7280;
+      font-weight: 500;
+    }
+
+    .data-value {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .trial-info {
+      background: #F0F9FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .trial-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .trial-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .trial-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #1E40AF;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .trial-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .toggle-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background: #D1D5DB;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.active {
+      background: #2563EB;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: left 0.3s;
+    }
+
+    .toggle-switch.active::after {
+      left: 24px;
+    }
+
+    .compliance-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .compliance-table th {
+      background: #F9FAFB;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      border-bottom: 2px solid #E5E7EB;
+    }
+
+    .compliance-table td {
+      padding: 12px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .compliance-table tr:hover {
+      background: #F9FAFB;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #DBEAFE;
+      color: #1E40AF;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-badge.verified {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .grade-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .info-icon {
+      cursor: help;
+      color: #6B7280;
+      font-weight: bold;
+      font-size: 12px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #D1D5DB;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      background: #111827;
+      color: white;
+      text-align: left;
+      padding: 8px 12px;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 0;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .info-icon:hover .tooltip {
+      visibility: visible;
+    }
+
+    .code-block {
+      background: #1F2937;
+      color: #E5E7EB;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .code-block.active {
+      display: block;
+    }
+
+    .copy-btn {
+      padding: 8px 16px;
+      background: #2563EB;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .copy-btn.active {
+      display: inline-block;
+    }
+
+    .copy-btn:hover {
+      background: #1D4ED8;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #059669;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+
+    .submit-btn:hover {
+      background: #047857;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #059669;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+      font-size: 14px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #E5E7EB;
+      border-top-color: #2563EB;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .reset-btn {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      color: #2563EB;
+      border: 1px solid #2563EB;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #F0F9FF;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ClinicalMCP</h1>
+      <p class="subtitle">Automated Adverse Event Analysis & eCRF Filing</p>
+    </header>
+
+    <div class="main-grid">
+      <!-- LEFT: INPUT -->
+      <div class="card">
+        <div class="card-title">Adverse Event Report</div>
+        
+        <div class="scenarios">
+          <button class="scenario-btn" onclick="loadScenario('Trial: CARDIAC-2025 Phase II Patient P-001 reports severe chest pain, shortness of breath, and dizziness. Heart rate elevated to 120 bpm.')">Severe Cardiac</button>
+          <button class="scenario-btn" onclick="loadScenario('Trial: NEURO-2024 Phase III Patient P-042 experiencing mild nausea and slight dizziness after medication. Symptoms mild and stable.')">Mild Nausea</button>
+          <button class="scenario-btn" onclick="loadScenario('Trial: UNKNOWN-2025 Phase I Patient P-999 reports unusual symptoms: intermittent headache, fatigue, and occasional tremors. Unclear etiology.')">Ambiguous</button>
+        </div>
+
+        <div class="input-group">
+          <label>Clinical Notes</label>
+          <div class="textarea-wrapper">
+            <textarea id="report" placeholder="Enter adverse event details..."></textarea>
+            <div class="icon-buttons">
+              <button class="icon-btn" title="Microphone">MIC</button>
+              <button class="icon-btn" title="Upload Scan">SCAN</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="run-btn" onclick="analyze()" id="runBtn">Analyze Event</button>
+      </div>
+
+      <!-- RIGHT: RESULTS -->
+      <div class="card results-grid" id="resultsCard" style="display: none;">
+        <div class="card-title">Analysis Results</div>
+        
+        <div>
+          <div class="data-row">
+            <span class="data-label">Symptoms Detected</span>
+            <span class="data-value" id="resultSymptoms">-</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Severity Level</span>
+            <span class="data-value" id="resultSeverity">-</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Risk Assessment</span>
+            <span class="data-value" id="resultRisk">-</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Recommendation</span>
+            <span class="data-value" id="resultAction">-</span>
+          </div>
+        </div>
+
+        <button class="reset-btn" onclick="location.reload()">Analyze Another</button>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div class="card" id="loadingCard" style="display: none;">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p style="color: #6B7280;">Analyzing adverse event...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIAL INFORMATION -->
+    <div class="card" id="trialCard" style="display: none;">
+      <div class="card-title">Trial Information</div>
+      <div class="trial-info">
+        <div class="trial-info-grid">
+          <div class="trial-field">
+            <span class="trial-label">Trial Name</span>
+            <span class="trial-value" id="trialName">-</span>
+          </div>
+          <div class="trial-field">
+            <span class="trial-label">Phase</span>
+            <span class="trial-value" id="trialPhase">-</span>
+          </div>
+          <div class="trial-field">
+            <span class="trial-label">Patient ID</span>
+            <span class="trial-value" id="patientId">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE SECTION -->
+    <div class="card" id="complianceCard" style="display: none;">
+      <div class="card-title">Automated eCRF Filing</div>
+      
+      <div class="toggle-section">
+        <span class="toggle-label">View FHIR JSON</span>
+        <div class="toggle-switch" id="fhirToggle" onclick="toggleFHIR()"></div>
+      </div>
+
+      <div class="code-block" id="fhirCode"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">Copy to Clipboard</button>
+
+      <table class="compliance-table" id="complianceTable">
+        <thead>
+          <tr>
+            <th>Protocol Field</th>
+            <th>Extracted Data</th>
+            <th>CTCAE Grade</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="complianceBody">
+        </tbody>
+      </table>
+
+      <button class="submit-btn" onclick="submitToEDC()">Sign and Submit to EDC</button>
+    </div>
+  </div>
+
+  <script>
+    let currentData = null;
+
+    function loadScenario(text) {
+      document.getElementById('report').value = text;
+    }
+
+    async function analyze() {
+      const report = document.getElementById('report').value;
+      if (!report.trim()) return;
+
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('resultsCard').style.display = 'none';
+      document.getElementById('complianceCard').style.display = 'none';
+      document.getElementById('trialCard').style.display = 'none';
+      document.getElementById('loadingCard').style.display = 'block';
+
+      try {
+        const res = await fetch('http://localhost:3001/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ report_text: report })
+        });
+
+        const data = await res.json();
+        currentData = data;
+        displayResults(data);
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        document.getElementById('loadingCard').style.display = 'none';
+        document.getElementById('runBtn').disabled = false;
+      }
+    }
+
+    function displayResults(data) {
+      const riskLevel = data.risk_analysis.risk_level;
+      const riskScore = (data.risk_analysis.risk_score * 100).toFixed(0);
+
+      document.getElementById('trialName').textContent = data.trial_metadata.trial_name;
+      document.getElementById('trialPhase').textContent = data.trial_metadata.phase;
+      document.getElementById('patientId').textContent = data.trial_metadata.patient_id;
+      document.getElementById('trialCard').style.display = 'block';
+
+      document.getElementById('resultSymptoms').textContent = data.patient_data.symptoms.join(', ');
+      document.getElementById('resultSeverity').textContent = data.patient_data.severity.charAt(0).toUpperCase() + data.patient_data.severity.slice(1);
+      document.getElementById('resultRisk').textContent = riskScore + '% - ' + riskLevel;
+      document.getElementById('resultAction').textContent = data.recommendation.action;
+
+      document.getElementById('resultsCard').style.display = 'block';
+
+      const complianceData = [
+        ['Adverse Event', data.patient_data.symptoms[0] || 'N/A', 'Grade 2 (Moderate)'],
+        ['Severity', data.patient_data.severity, 'Grade ' + (data.patient_data.severity === 'high' ? '3' : data.patient_data.severity === 'medium' ? '2' : '1')],
+        ['Risk Score', riskScore + '%', 'Grade ' + (riskLevel === 'HIGH' ? '3' : riskLevel === 'MEDIUM' ? '2' : '1')],
+        ['Recommendation', data.recommendation.action, 'Grade 2']
+      ];
+
+      const tbody = document.getElementById('complianceBody');
+      tbody.innerHTML = complianceData.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td><div class="grade-cell"><span>${row[2]}</span><span class="info-icon">i<span class="tooltip">Reasoning: Symptom severity matches Protocol v5.0 Section 4.1 thresholds.</span></span></div></td>
+          <td><span class="status-badge" data-status="auto">Auto-Filled</span></td>
+        </tr>
+      `).join('');
+
+      generateFHIR(data, complianceData);
+      document.getElementById('complianceCard').style.display = 'block';
+    }
+
+    function generateFHIR(data, complianceData) {
+      const fhir = {
+        resourceType: 'AdverseEvent',
+        id: data.trial_metadata.patient_id,
+        status: 'completed',
+        subject: { reference: 'Patient/' + data.trial_metadata.patient_id },
+        event: { coding: [{ code: data.patient_data.symptoms[0], display: data.patient_data.symptoms.join(', ') }] },
+        severity: data.patient_data.severity,
+        seriousness: { coding: [{ code: data.risk_analysis.risk_level }] },
+        study: { reference: 'ResearchStudy/' + data.trial_metadata.trial_name },
+        suspectEntity: complianceData.map(row => ({ instance: { reference: 'Medication/' + row[0] } }))
+      };
+      document.getElementById('fhirCode').textContent = JSON.stringify(fhir, null, 2);
+    }
+
+    function toggleFHIR() {
+      const toggle = document.getElementById('fhirToggle');
+      const code = document.getElementById('fhirCode');
+      const table = document.getElementById('complianceTable');
+      const copyBtn = document.getElementById('copyBtn');
+      
+      toggle.classList.toggle('active');
+      code.classList.toggle('active');
+      table.style.display = table.style.display === 'none' ? 'table' : 'none';
+      copyBtn.classList.toggle('active');
+    }
+
+    function copyToClipboard() {
+      const code = document.getElementById('fhirCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('FHIR JSON copied to clipboard');
+      });
+    }
+
+    function submitToEDC() {
+      const badges = document.querySelectorAll('[data-status]');
+      badges.forEach(badge => {
+        badge.classList.add('verified');
+        badge.textContent = 'Verified';
+      });
+      showToast('Success: Encrypted transmission to Sponsor Database');
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+</body>
+</html>

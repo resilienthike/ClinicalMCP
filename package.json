@@ -1,0 +1,17 @@
+{
+  "name": "clinical-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node agent.js",
+    "demo": "node demo.js"
+  },
+  "dependencies": {
+    "@e2b/code-interpreter": "^1.0.2",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "groq-sdk": "^0.7.0",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}
